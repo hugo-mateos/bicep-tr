@@ -14,7 +14,7 @@ param imageVersion string = 'latest'
 
 // Virtual Network
 resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' = {
-  name: 'Vnet-ham-01'
+  name: 'VNet-NON-PROD-centralus'
   location: location
   properties: {
     addressSpace: {
@@ -24,9 +24,32 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' = {
     }
     subnets: [
       {
-        name: 'default'
+        name: 'subnet-datadog-NON-PROD-frontend'
         properties: {
           addressPrefix: '10.0.0.0/24'
+        }
+      }
+    ]
+  }
+}
+
+// Network Security Group
+resource nsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
+  name: 'datadog-NON-PROD-frontend-nsg'
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'AllowRDP'
+        properties: {
+          priority: 1000
+          direction: 'Inbound'
+          access: 'Allow'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '3389'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
         }
       }
     ]
@@ -61,6 +84,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-02-01' = {
         }
       }
     ]
+    networkSecurityGroup: {
+      id: nsg.id
+    }
   }
 }
 
