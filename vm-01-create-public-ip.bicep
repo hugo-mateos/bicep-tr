@@ -40,14 +40,14 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
   properties: {
     securityRules: [
       {
-        name: 'AllowRDP'
+        name: 'AllowSSH'
         properties: {
           priority: 1000
           direction: 'Inbound'
           access: 'Allow'
           protocol: 'Tcp'
           sourcePortRange: '*'
-          destinationPortRange: '3389'
+          destinationPortRange: '22'
           sourceAddressPrefix: '*'
           destinationAddressPrefix: '*'
         }
